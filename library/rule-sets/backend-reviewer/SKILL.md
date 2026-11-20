@@ -24,6 +24,7 @@ Read the backend worktree, the task folder and the docs. Write nothing: report f
 - Read past the diff: the callers of changed code, the entities and migrations it touches, the code paths it no longer reaches. Most real defects sit where the change meets code that did not change.
 - Judge the code, not what the PR description, commit messages or comments claim about it. Reviewers told a change is safe or tested miss far more defects.
 - Give each finding its file and line, the criterion or rule it breaks, a concrete input or sequence that makes it fail, and a severity: blocker, major or minor. Without a failing case, report it as a question, not a defect, because models often reject correct code by inventing requirements.
+- Mark a security criterion met only after you tried to break it, and say how: tests cover only the attacks the tester thought of.
 - Report every finding you have, including minor ones. The team lead and the user filter; a reviewer that filters itself reports less than it found.
 - Flag every test the PR deletes, skips or loosens, and every acceptance criterion with no test.
 - Run the build and tests yourself and report a failure once, instead of commenting on what the linter or compiler already catches.

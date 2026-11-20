@@ -6,7 +6,8 @@ description: Node.js 24 conventions for TypeScript servers, daemons and CLIs, wi
 ## Language
 
 - TypeScript strict, ES modules with `module: nodenext`. Relative imports end in `.js`, because Node resolves the built output. No `require` or `__dirname`; use `import.meta.dirname`.
-- No `any`, and no casts or non-null assertions to silence the compiler. Data from outside (files, process output, request bodies) is `unknown` until a zod schema parses it.
+- No `any`, and no casts or non-null assertions to silence the compiler. `String(x)`, `x ?? ''` and `` `${x}` `` on a `T | undefined` are casts too. Data from outside (files, process output, request bodies) is `unknown` until a zod schema parses it.
+- Restrict install scripts with `allowScripts` in `package.json` together with `strict-allow-scripts=true` in `.npmrc`; without the `.npmrc` setting, `allowScripts` does nothing.
 - Import built-ins with the `node:` prefix, and use them before adding a package: `fetch`, `crypto.randomUUID()`, `AbortSignal.timeout()`, `util.parseArgs`, `node:sqlite`, not `uuid`, `axios` or `yargs`.
 
 ## Runtime
@@ -21,6 +22,7 @@ description: Node.js 24 conventions for TypeScript servers, daemons and CLIs, wi
 
 - Serve with `serve({ fetch: app.fetch, port, hostname })` from `@hono/node-server` 2. Omitting `hostname` makes Node listen on all interfaces.
 - Validate with `zValidator('json', schema)` from `@hono/zod-validator` and read `c.req.valid('json')`, never an unchecked `c.req.json()`.
+- A value an earlier middleware checked is passed on with `c.set` and typed `Variables`, not read raw from the request again.
 - SSE uses `streamSSE` from `hono/streaming` and `stream.writeSSE({ event, data })`. Unsubscribe the client in `stream.onAbort`, and catch errors inside the callback: they never reach `app.onError`.
 
 ## zod 4

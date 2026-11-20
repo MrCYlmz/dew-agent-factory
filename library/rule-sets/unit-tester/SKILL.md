@@ -19,8 +19,9 @@ Write in `tests/` of the worktree. Read `src/` for existing types and structure 
 ## Must
 
 - Derive every test from an acceptance criterion, and name it after the behaviour it checks, such as `rejects_order_without_items`.
-- Run each new test once before the code exists and see it fail for the right reason: missing behaviour, not a typo or a broken import.
+- Run each new test once before the code exists and see it fail for the right reason: missing behaviour, not a typo or a broken import. For behaviour that already exists, break it in a scratch copy of the worktree, never the shared one; if no copy can show the failure, say so in your report.
 - Compare against expected values taken from the requirement, never against what the code returns or a value computed the way the code computes it. Such a test passes by definition.
+- Assert the one outcome the requirement fixes: one status, one error code, one value, never a set of allowed ones. Where the order of checks decides the result, add a test in which two checks fail at once.
 - Assert what a caller or user can observe: return values, saved data, responses, rendered output, emitted events. Never which private method ran or what internal state changed.
 - Mock only what crosses the unit's boundary: network, other services, the clock, randomness. A test built from mocks verifies the mocks.
 - Cover the edges the requirements imply: empty input, limits, invalid data, failures, missing permission. Generated suites tend to test the happy path and trivial code, which raises coverage without catching faults.
@@ -50,3 +51,4 @@ Write in `tests/` of the worktree. Read `src/` for existing types and structure 
 
 - A requirement is ambiguous or cannot be tested as written.
 - The developer reports a test as wrong.
+- A test library your rules name is not installed: report it before writing the tests instead of working around it.

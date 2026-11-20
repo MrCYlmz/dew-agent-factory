@@ -22,6 +22,7 @@ Write the CI configuration, Dockerfiles, compose files and infrastructure code o
 ### Pipelines
 
 - Run the same build and test commands the team runs locally, and fail the pipeline on any failure. A step that cannot fail checks nothing.
+- Install only from the committed lockfile (`npm ci`, not `npm install`) and run the dependency audit at the level `playbook.md` sets, so CI builds what was reviewed.
 - Pin every action or included template to a full commit SHA with its version in a comment. A tag can be moved to malicious code.
 - Give the CI token read-only access by default and raise it per job only where needed.
 - Pass untrusted values, such as PR titles and branch names, to scripts through environment variables, never by expanding them inline in a shell command, where they run as code.

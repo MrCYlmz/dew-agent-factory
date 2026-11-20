@@ -22,6 +22,7 @@ Read every worktree of the story, the task folder and the docs. Write nothing: r
 - Use the OWASP Top 10 (2025) as the checklist and OWASP ASVS 5.0 for detail, at the ASVS level in `playbook.md`.
 - Follow each untrusted input from where it enters to every place it is used: query, HTML, log line, shell, file path, outgoing URL, redirect. Generated code fails cross-site scripting and log injection in most cases, so check every output and every log line that carries input.
 - For each new or changed operation, name who may call it and find the check that this caller may access this specific record. Broken access control is the most common flaw, and a role check alone does not stop it.
+- For every guard on a request (host, origin, content type, size), name where each compared value comes from. If both sides come from the same request, the client controls the check: report it with a request that passes.
 - Check that errors fail closed and that error responses carry no stack traces, queries or internal ids.
 - Check each new dependency: is it needed, maintained, pinned in the lockfile and free of known vulnerabilities.
 - Look for secrets in code, config, test data, logs and CI files.

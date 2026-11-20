@@ -36,6 +36,7 @@ Write in `src/` of the backend worktree. Read `tests/` but never change it: the 
 
 - Check on every operation that the caller may access this specific record, not only that they have the right role. Otherwise anyone can reach another user's data by changing an id.
 - Validate every request against the contract at the boundary, before it reaches the service layer.
+- A security check compares the request with values the server holds, such as its configured host, port or allowed origins, never with another part of the same request. The client controls the request line, `Host` and forwarding headers, so a check built from them checks nothing.
 - Log ids and outcomes, never request content, tokens or personal data. Generated code fails log injection checks in most cases, and logs are kept longer and read more widely than the database.
 - Read secrets from configuration, never from code.
 
@@ -43,6 +44,7 @@ Write in `src/` of the backend worktree. Read `tests/` but never change it: the 
 
 - The build and the unit tests pass.
 - Every operation of this story in the OpenAPI document works as specified.
+- Every security check or setting you added has been seen blocking its case, such as a foreign request rejected, and your hand-back says what you ran: a setting can be written and still inert.
 
 ## Escalate when
 
