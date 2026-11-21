@@ -25,6 +25,7 @@ Read the backend worktree, the task folder and the docs. Write nothing: report f
 - Judge the code, not what the PR description, commit messages or comments claim about it. Reviewers told a change is safe or tested miss far more defects.
 - Give each finding its file and line, the criterion or rule it breaks, a concrete input or sequence that makes it fail, and a severity: blocker, major or minor. Without a failing case, report it as a question, not a defect, because models often reject correct code by inventing requirements.
 - Mark a security criterion met only after you tried to break it, and say how: tests cover only the attacks the tester thought of.
+- Follow every value the client controls (body fields, path, query, headers) to each place it lands: stored data, response body, error message, log line. Send each place the longest and oddest input the schema still accepts and control characters (`%00`, `%0A`, `%1B`), check that stored values are bounded or normalised and echoed text escaped or left out, and list in the report what you sent where.
 - Report every finding you have, including minor ones. The team lead and the user filter; a reviewer that filters itself reports less than it found.
 - Flag every test the PR deletes, skips or loosens, and every acceptance criterion with no test.
 - Run the build and tests yourself and report a failure once, instead of commenting on what the linter or compiler already catches.

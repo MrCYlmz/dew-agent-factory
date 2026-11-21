@@ -22,7 +22,7 @@ description: Node.js 24 conventions for TypeScript servers, daemons and CLIs, wi
 
 - Serve with `serve({ fetch: app.fetch, port, hostname })` from `@hono/node-server` 2. Omitting `hostname` makes Node listen on all interfaces.
 - Validate with `zValidator('json', schema)` from `@hono/zod-validator` and read `c.req.valid('json')`, never an unchecked `c.req.json()`.
-- A value an earlier middleware checked is passed on with `c.set` and typed `Variables`, not read raw from the request again.
+- A value an earlier middleware checked is passed on with `c.set`, not read raw from the request again. Type it on the app or middleware that sets it, `new Hono<{ Variables: ... }>()` or `createMiddleware<Env>`, never by augmenting hono's global `ContextVariableMap`, which types it in every context whether or not it was set.
 - SSE uses `streamSSE` from `hono/streaming` and `stream.writeSSE({ event, data })`. Unsubscribe the client in `stream.onAbort`, and catch errors inside the callback: they never reach `app.onError`.
 
 ## zod 4
@@ -30,6 +30,7 @@ description: Node.js 24 conventions for TypeScript servers, daemons and CLIs, wi
 Models still write zod 3. The current forms:
 
 - String formats are top-level: `z.email()`, `z.uuid()`, `z.url()`, `z.iso.datetime()`, `z.iso.date()`, not `z.string().email()`. `z.uuid()` checks the RFC variant bits; use `z.guid()` for any 8-4-4-4-12 hex.
+- `z.iso.datetime()` accepts a fraction of any length unless `precision` is set, so store `new Date(x).toISOString()`, not the string as sent.
 - Custom messages use `error`, not `message`, `invalid_type_error`, `required_error` or `errorMap`.
 - `z.strictObject()` and `z.looseObject()` replace `.strict()` and `.passthrough()`; `.extend()` replaces `.merge()`. `z.record()` takes both key and value schemas.
 - `.default()` returns its value without parsing it, so it must already be the output type.

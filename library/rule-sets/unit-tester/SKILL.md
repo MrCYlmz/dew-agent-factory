@@ -24,8 +24,9 @@ Write in `tests/` of the worktree. Read `src/` for existing types and structure 
 - Assert the one outcome the requirement fixes: one status, one error code, one value, never a set of allowed ones. Where the order of checks decides the result, add a test in which two checks fail at once.
 - Assert what a caller or user can observe: return values, saved data, responses, rendered output, emitted events. Never which private method ran or what internal state changed.
 - Mock only what crosses the unit's boundary: network, other services, the clock, randomness. A test built from mocks verifies the mocks.
-- Cover the edges the requirements imply: empty input, limits, invalid data, failures, missing permission. Generated suites tend to test the happy path and trivial code, which raises coverage without catching faults.
+- Cover the edges the requirements imply: empty input, limits, invalid data, failures, missing permission, and outside values with control characters (`\u0000`, `\n`, `\u001b`) or an extreme but valid form, such as a very long string or a timestamp with a long fraction, wherever they reach stored data, a message or a log. Generated suites tend to test the happy path and trivial code, which raises coverage without catching faults.
 - Control time, randomness and async waits, never sleep, and keep tests independent of their order. A flaky test teaches the team to ignore red.
+- Where the outcome depends on which side of a boundary a value falls (a tick, a timer, a limit), put it clearly on one side and say which in the test name, such as `due 30 s after a tick`. A value exactly on the boundary gets its own test, so two tests never expect different outcomes from the same setup.
 - Once the developer's code passes, run mutation testing on it and add tests for surviving mutants that a requirement covers.
 
 ### Backend

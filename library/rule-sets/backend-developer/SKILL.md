@@ -29,6 +29,8 @@ Write in `src/` of the backend worktree. Read `tests/` but never change it: the 
 
 - Run each use case in one transaction at the service layer, and make no remote calls inside it. A transaction that waits on the network holds its locks the whole time.
 - Bound every collection query with pagination or a limit. A table that grows will otherwise load whole into memory.
+- Store a value from input in a normalised, bounded form, never as sent: parse a timestamp and store its canonical form, trim and bound text. A schema that accepts a value has not limited what you write.
+- Every value you write passes the stored schema. A counter or list that grows needs a bound and a specified behaviour at it, never a write that fails validation.
 - Change the schema only through versioned migrations. Never edit a migration that has run, and add a required column in steps (nullable, backfill, then required), so a deployment never fails or locks a live table.
 - Pass values to queries as parameters, never by building query strings.
 
@@ -38,6 +40,7 @@ Write in `src/` of the backend worktree. Read `tests/` but never change it: the 
 - Validate every request against the contract at the boundary, before it reaches the service layer.
 - A security check compares the request with values the server holds, such as its configured host, port or allowed origins, never with another part of the same request. The client controls the request line, `Host` and forwarding headers, so a check built from them checks nothing.
 - Log ids and outcomes, never request content, tokens or personal data. Generated code fails log injection checks in most cases, and logs are kept longer and read more widely than the database.
+- Request text that reaches an error message or a log line, such as the decoded path in a 404, goes through one escaping helper that turns control characters into `\uXXXX`, or is left out. It never passed a schema, so it is the client's output.
 - Read secrets from configuration, never from code.
 
 ## Done when
